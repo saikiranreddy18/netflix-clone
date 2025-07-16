@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     environment {
-        BUILD_TAG = "${BUILD_NUMBER}"
         DOCKER_IMAGE = "dsai18/netflix-clone:${BUILD_NUMBER}"
     }
 
@@ -25,7 +24,9 @@ pipeline {
             steps {
                 script {
                     sh '''
+                        echo "Logging in to DockerHub..."
                         docker login -u dsai18 -p sai.T123\\$
+                        echo "Pushing Docker image..."
                         docker push dsai18/netflix-clone:$BUILD_NUMBER
                     '''
                 }
@@ -34,11 +35,13 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                sh """
-                    helm upgrade --install netflix-clone ./helm-chart \
-                      --set image.repository=dsai18/netflix-clone \
-                      --set image.tag=${BUILD_NUMBER}
-                """
+                script {
+                    sh """
+                        helm upgrade --install netflix-clone ./helm-chart \
+                          --set image.repository=dsai18/netflix-clone \
+                          --set image.tag=${BUILD_NUMBER}
+                    """
+                }
             }
         }
     }
