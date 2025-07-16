@@ -2,7 +2,8 @@ replicaCount: 2
 
 image:
   repository: dsai18/netflix-clone
-  tag: latest
+  tag: latest  # This will be overridden by Jenkins in the pipeline
+  pullPolicy: IfNotPresent  # Optional: avoids re-pulling if image already exists
 
 service:
   type: LoadBalancer
