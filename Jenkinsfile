@@ -6,9 +6,10 @@ pipeline {
     }
 
     stages {
+        // ✅ Optional: Remove if Jenkins auto-checks out the repo
         stage('Clone Repo') {
             steps {
-                git 'https://github.com/saikiranreddy18/netflix-clone.git'
+                git branch: 'main', url: 'https://github.com/saikiranreddy18/netflix-clone.git'
             }
         }
 
