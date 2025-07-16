@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: netflix-clone
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: 2
   selector:
     matchLabels:
       app: netflix-clone
@@ -13,7 +13,7 @@ spec:
         app: netflix-clone
     spec:
       containers:
-      - name: flask-app
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-        ports:
-        - containerPort: {{ .Values.containerPort }}
+        - name: netflix-clone
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          ports:
+            - containerPort: 80
