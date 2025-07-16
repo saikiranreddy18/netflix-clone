@@ -4,8 +4,9 @@ metadata:
   name: netflix-clone
 spec:
   type: {{ .Values.service.type }}
-  ports:
-    - port: {{ .Values.service.port }}
-      targetPort: {{ .Values.containerPort }}
   selector:
     app: netflix-clone
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
