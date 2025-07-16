@@ -2,13 +2,14 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "your-dockerhub-username/netflix-clone:${BUILD_NUMBER}"
+        BUILD_TAG = "${BUILD_NUMBER}"
+        DOCKER_IMAGE = "dsai18/netflix-clone:${BUILD_NUMBER}"
     }
 
     stages {
-        stage('Checkout Code') {
+        stage('Clone Repo') {
             steps {
-                git 'https://github.com/your-user/netflix-clone.git'
+                git 'https://github.com/saikiranreddy18/netflix-clone.git'
             }
         }
 
@@ -20,14 +21,13 @@ pipeline {
             }
         }
 
-        stage('Push Image to DockerHub') {
+        stage('Push to DockerHub') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    script {
-                        docker.withRegistry('', 'dockerhub-creds') {
-                            docker.image(DOCKER_IMAGE).push()
-                        }
-                    }
+                script {
+                    sh '''
+                        docker login -u dsai18 -p sai.T123\\$
+                        docker push dsai18/netflix-clone:$BUILD_NUMBER
+                    '''
                 }
             }
         }
@@ -35,9 +35,9 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 sh """
-                helm upgrade --install netflix-clone ./helm-chart \
-                  --set image.repository=your-dockerhub-username/netflix-clone \
-                  --set image.tag=${BUILD_NUMBER}
+                    helm upgrade --install netflix-clone ./helm-chart \
+                      --set image.repository=dsai18/netflix-clone \
+                      --set image.tag=${BUILD_NUMBER}
                 """
             }
         }
