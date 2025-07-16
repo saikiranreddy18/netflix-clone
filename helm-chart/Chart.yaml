@@ -1,5 +1,6 @@
 apiVersion: v2
 name: netflix-clone
+description: A simple Netflix clone using Flask
+type: application
 version: 0.1.0
 appVersion: "1.0"
-description: A simple Netflix clone using Flask
